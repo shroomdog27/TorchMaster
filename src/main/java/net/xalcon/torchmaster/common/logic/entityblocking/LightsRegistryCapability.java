@@ -10,9 +10,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.entity.EntityCheckSpecialSpawnEvent.SpecialSpawnType;
 import net.xalcon.torchmaster.Torchmaster;
 import net.xalcon.torchmaster.common.ModCaps;
 import net.xalcon.torchmaster.common.commands.TorchInfo;
+import net.xalcon.torchmaster.util.Location;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -163,6 +165,18 @@ public class LightsRegistryCapability implements ICapabilityProvider, ICapabilit
             {
                 IEntityBlockingLight light = lightEntry.getValue();
                 if(light.shouldBlockEntity(entity))
+                    return true;
+            }
+            return false;
+        }
+        
+        @Override
+        public boolean shouldBlockEntity(SpecialSpawnType type, Location location)
+        {
+            for(HashMap.Entry<String, IEntityBlockingLight> lightEntry : lights.entrySet())
+            {
+                IEntityBlockingLight light = lightEntry.getValue();
+                if(light.shouldBlockEntity(type, location))
                     return true;
             }
             return false;

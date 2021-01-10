@@ -35,11 +35,13 @@ public class EntityBlockingLightBlock extends Block
         this.shape = shape;
     }
 
+    @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
         return this.shape;
     }
 
+    @Override
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {
@@ -63,6 +65,7 @@ public class EntityBlockingLightBlock extends Block
         });
     }
 
+    @Override
     public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
         return true;
     }

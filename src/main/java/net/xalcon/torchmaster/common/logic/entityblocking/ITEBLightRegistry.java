@@ -6,11 +6,23 @@ import net.minecraft.util.Tuple;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.event.entity.EntityCheckSpecialSpawnEvent.SpecialSpawnType;
 import net.xalcon.torchmaster.common.commands.TorchInfo;
+import net.xalcon.torchmaster.util.Location;
 
 public interface ITEBLightRegistry extends INBTSerializable<CompoundNBT>
 {
     boolean shouldBlockEntity(Entity entity);
+    
+    /**
+     * Blocks an entity based on its entity type rather than the actual entity.<br>
+     * 
+     * Useful for blocking the spawns of phantoms, pillagers, and cats.
+     * @param type the type of entity to block
+     * @param location the location of the entity
+     * @return if they enttity should be blocked
+     */
+    boolean shouldBlockEntity(SpecialSpawnType type, Location location);
 
     /**
      * Warning: The IEntityBlockingLight instance should not be directly attached to any chunk data!

@@ -27,6 +27,12 @@ public class TorchmasterConfig
 
     public static class General
     {
+        public final ForgeConfigSpec.ConfigValue<Boolean> blockPhantoms;
+        public final ForgeConfigSpec.ConfigValue<Boolean> blockCats;
+        public final ForgeConfigSpec.ConfigValue<Boolean> blockPatrols;
+        
+        
+        
         public final ForgeConfigSpec.ConfigValue<Boolean> beginnerTooltips;
         public final ForgeConfigSpec.ConfigValue<Boolean> blockOnlyNaturalSpawns;
         public final ForgeConfigSpec.ConfigValue<Boolean> lycanitesMobsBlockAll;
@@ -48,6 +54,18 @@ public class TorchmasterConfig
         {
             builder.push("General");
 
+            blockPhantoms = builder
+                    .comment("Should phantoms be blocked?")
+                    .translation("torchmaster.config.blockPhantoms.description")
+                    .define("blockPhantoms", true);
+            blockCats = builder
+                    .comment("Should cats be blocked?")
+                    .translation("torchmaster.config.blockCats.description")
+                    .define("blockCats", true);
+            blockPatrols = builder
+                    .comment("Should pillager patrols be blocked?")
+                    .translation("torchmaster.config.blockPatrols.description")
+                    .define("blockPatrols", true);
             beginnerTooltips = builder
                 .comment("Show additional information in the tooltip of certain items and blocks")
                 .translation("torchmaster.config.beginnerTooltips.description")

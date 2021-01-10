@@ -6,8 +6,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityCheckSpecialSpawnEvent;
+import net.minecraftforge.event.entity.EntityCheckSpecialSpawnEvent.SpecialSpawnType;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -15,6 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.xalcon.torchmaster.Torchmaster;
 import net.xalcon.torchmaster.TorchmasterConfig;
 import net.xalcon.torchmaster.common.ModCaps;
+import net.xalcon.torchmaster.util.Location;
 
 @Mod.EventBusSubscriber(modid = Torchmaster.MODID)
 public class EntityBlockingEventHandler
@@ -42,6 +46,30 @@ public class EntityBlockingEventHandler
             {
                 if (log) Torchmaster.Log.debug("Allowed spawn of {}", event.getEntity().getType().getRegistryName());
             }
+        });
+    }
+    
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onCheckSpecialSpawn(EntityCheckSpecialSpawnEvent event)
+    {
+        boolean log = TorchmasterConfig.GENERAL.logSpawnChecks.get();
+        if (log) Torchmaster.Log.info("CheckSpecialSpawn - SpecialSpawnType: {}", event.getEntityType());
+        if(!TorchmasterConfig.GENERAL.aggressiveSpawnChecks.get() && event.getResult() == Event.Result.ALLOW) return;
+        SpecialSpawnType type = event.getEntityType();
+        
+        Location location = new Location(event.getWorld(), event.getX(), event.getY(), event.getZ());
+        
+        location.world.getCapability(ModCaps.TEB_REGISTRY).ifPresent(reg ->
+        {
+           if(reg.shouldBlockEntity(type, location))
+           {
+               event.setResult(Event.Result.DENY);
+               if (log) Torchmaster.Log.info("Blocking spawn of {}", type.toString());
+           }
+           else
+           {
+               if (log) Torchmaster.Log.info("Allowing spawn of {}", type.toString());
+           }
         });
     }
 
